@@ -56,3 +56,10 @@ export function nearbyBins(bins, point, maxDistance = 50) { if (!point)
     return []; return bins.filter(hasCoordinates).map(b => ({ ...b, distance: distanceMeters(point, [b.latitude, b.longitude]) })).filter(b => b.distance <= maxDistance).sort((a, b) => a.distance - b.distance || a.id.localeCompare(b.id)); }
 export function defaultComparison(history) { const sorted = [...history].sort(compareObservations); const after = sorted.find(r => r.kind === 'maintenance') || sorted[0]; const older = after ? sorted.filter(r => r.id !== after.id && r.created_at <= after.created_at) : []; const before = older.find(r => observationScore(r) > 0) || older[0]; return { before: before?.id || '', after: after?.id || '' }; }
 export const originLabel = b => b.origin === 'public' ? '공공데이터 수록' : b.origin === 'registry' ? '운영자 연결 공공자료' : '시민 발견 · 공공자료 미매칭';
+export function installationCheck(b) {
+    if (!b)
+        return { key: 'unknown', label: '설치 확인 보류', detail: '수거함 위치와 자료 연결을 확인해야 합니다.' };
+    if (b.origin === 'public' || b.origin === 'registry')
+        return { key: 'listed', label: '공공자료 수록', detail: '공공자료에 위치가 수록되어 있습니다. 다만 수록 사실만으로 설치 승인·적법성을 확정하지 않습니다.' };
+    return { key: 'unmatched', label: '공공자료 미매칭 · 행정 확인 필요', detail: '시민이 발견했으나 공공자료와 연결되지 않은 수거함입니다. 자료 누락·갱신 차이·사유지 여부가 있을 수 있어 불법으로 단정하지 않습니다.' };
+}

@@ -1,5 +1,5 @@
 import { h, Fragment, MapPin, ChevronRight } from './runtime.js';
-import { levels, originLabel, relativeTime, maintenanceTime, hasCoordinates } from './bin-model.js';
+import { levels, originLabel, relativeTime, maintenanceTime, hasCoordinates, installationCheck } from './bin-model.js';
 export const emptyFilters = { q: '', province: '', district: '', risk: 'all', origin: 'all', coordinates: 'all' };
 export function TrafficLegend() { return h("div", { className: "map-legend traffic-legend" }, Object.entries(levels).map(([k, v]) => h("span", { key: k },
     h("i", { style: { background: v.color } }),
@@ -41,15 +41,15 @@ export function CatalogControls({ bins, filters, onChange, showCoordinates = fal
     h("select", { className: "text-input", "aria-label": "\uC218\uAC70\uD568 \uC790\uB8CC \uAD6C\uBD84", value: filters.origin, onChange: e => change('origin', e.target.value) },
         h("option", { value: "all" }, "\uACF5\uACF5\uC790\uB8CC + \uC2DC\uBBFC \uBC1C\uACAC"),
         h("option", { value: "public" }, "\uACF5\uACF5\uC790\uB8CC \uC218\uB85D"),
-        h("option", { value: "citizen" }, "\uC2DC\uBBFC \uBC1C\uACAC \u00B7 \uBBF8\uB9E4\uCE6D")),
+        h("option", { value: "citizen" }, "\uACF5\uACF5\uC790\uB8CC \uBBF8\uB9E4\uCE6D \u00B7 \uD589\uC815 \uD655\uC778")),
     showCoordinates && h("select", { className: "text-input", "aria-label": "\uC88C\uD45C \uC81C\uACF5 \uC5EC\uBD80", value: filters.coordinates, onChange: e => change('coordinates', e.target.value) },
         h("option", { value: "all" }, "\uC88C\uD45C \uC81C\uACF5 \uC5EC\uBD80 \uC804\uCCB4"),
         h("option", { value: "provided" }, "\uC9C0\uB3C4 \uD45C\uC2DC \uAC00\uB2A5"),
         h("option", { value: "missing" }, "\uC88C\uD45C \uBBF8\uC81C\uACF5")),
     h("button", { className: "text-button", onClick: () => onChange({ ...emptyFilters }) }, "\uCD08\uAE30\uD654")); }
-export function BinCard({ bin: b, onOpen }) { return h("button", { className: "report-card bin-record-card", onClick: () => onOpen(b) },
+export function BinCard({ bin: b, onOpen }) { const install = installationCheck(b); return h("button", { className: "report-card bin-record-card", onClick: () => onOpen(b) },
     h("div", { className: "bin-card-head" },
-        h("span", { className: `bin-source-tag ${b.origin === 'citizen' ? 'citizen' : ''}` }, b.origin === 'citizen' ? '시민 발견' : '공공자료'),
+        h("span", { className: `bin-source-tag ${b.origin === 'citizen' ? 'citizen' : ''}` }, b.origin === 'citizen' ? '미등록 후보' : '공공자료'),
         h(ChevronRight, { size: 17 })),
     h("h3", null, b.title),
     h("p", { className: "bin-card-address" }, b.address),
@@ -65,5 +65,5 @@ export function BinCard({ bin: b, onOpen }) { return h("button", { className: "r
                 "\uAC74")),
         h("span", null, b.lastMaintenance ? `마지막 정비 ${relativeTime(maintenanceTime(b.lastMaintenance))}` : '정비 이력 없음')),
     h("div", { className: "card-bottom" },
-        h("span", null, b.origin === 'citizen' ? '공공자료 미매칭 · 미등록 단정 아님' : `자료 기준 ${b.checked || '확인 필요'}`),
+        h("span", null, b.origin === 'citizen' ? install.label : `자료 기준 ${b.checked || '확인 필요'}`),
         !hasCoordinates(b) && h("span", { className: "coordinate-missing" }, "\uC88C\uD45C \uBBF8\uC81C\uACF5"))); }

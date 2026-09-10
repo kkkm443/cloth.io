@@ -1,6 +1,6 @@
 import { h, Fragment } from './runtime.js';
 import { useCatalog } from './catalog.js';
-import { originLabel } from './bin-model.js';
+import { originLabel, nearbyBins as findNearbyBins } from './bin-model.js';
 import ReportLocation, { useReportLocation, PhotoLocationHint } from './report-location.js';
 "use client";
 import { apiRequest } from "./api.js";
@@ -68,8 +68,20 @@ export default function ReportForm({ open, onOpenChange, onSaved, initialBin = n
     const [validation, setValidation] = useState('idle'), [validationText, setValidationText] = useState(''), [validationReason, setValidationReason] = useState(''), [validationProgress, setValidationProgress] = useState(0);
     const [busy, setBusy] = useState(false), [error, setError] = useState('');
     const linkedBin = catalog.byId.get(binId) || null;
+    const nearbyPublic = useMemo(() => point ? findNearbyBins(catalog.bins, point, 50).filter(b => b.origin !== 'citizen') : [], [catalog.bins, point]);
+    const installation = useMemo(() => {
+        if (linkedBin && linkedBin.origin !== 'citizen')
+            return { key: 'listed', label: '공공자료 수록', detail: '공공데이터에 위치가 수록된 수거함입니다. 수록 사실만으로 설치 승인·적법성이 확정되는 것은 아니에요.' };
+        if (linkedBin?.origin === 'citizen')
+            return { key: 'unmatched', label: '공공자료 미매칭 · 행정 확인 필요', detail: '시민이 발견한 수거함으로 공공자료와 연결되지 않았어요. 자료 누락·갱신 차이·사유지 여부가 있을 수 있어 행정 확인이 필요해요.' };
+        if (!point)
+            return { key: 'unknown', label: '설치 확인 보류', detail: '정확한 좌표가 있어야 공공자료와 비교할 수 있어요.' };
+        if (nearbyPublic.length)
+            return { key: 'candidate', label: '공공자료 근접 후보 있음', detail: `50m 이내 공공자료 후보가 ${nearbyPublic.length}곳 있어요. 같은 수거함이면 위 위치 선택에서 기존 수거함과 연결해 주세요.` };
+        return { key: 'unmatched', label: '공공자료 미매칭 · 행정 확인 필요', detail: '50m 이내에서 공공자료 수거함 후보를 찾지 못했어요. 미등록 후보이지만, 이것만으로 불법 설치라고 단정하지 않아요.' };
+    }, [linkedBin, nearbyPublic.length, point]);
     const validationReady = validation === 'valid' || validation === 'override';
-    const worker = useRef(null), timer = useRef(null), validationWorker = useRef(null), validationTimer = useRef(null), validationUrl = useRef(''), fileInput = useRef(null), id = useRef(''), generation = useRef(0);
+    const worker = useRef(null), timer = useRef(null), validationWorker = useRef(null), validationTimer = useRef(null), validationUrl = useRef(''), fileInput = useRef(null), cameraInput = useRef(null), id = useRef(''), generation = useRef(0);
     useEffect(() => {
         if (!open)
             return;
@@ -389,8 +401,10 @@ export default function ReportForm({ open, onOpenChange, onSaved, initialBin = n
             if (!location.canContinue)
                 return;
             const now = Date.now();
-            setIntakeTitle(`${address.trim()} 의류수거함 현장 확인 요청`.slice(0, 200));
-            setIntakeBody(complaintText({ id: id.current, address: address.trim(), description: description.trim(), category, issues, status: 'reported', latitude: point?.[0] ?? null, longitude: point?.[1] ?? null, analysis: ai === 'done' ? 'CLIP 제안 · 사용자 확인' : '직접 분류', created_at: now, updated_at: now, isMine: true }));
+            const installNeedsCheck = installation.key === 'unmatched';
+            setIntakeTitle(`${address.trim()} 의류수거함 ${installNeedsCheck ? '설치 근거 및 현장' : '현장'} 확인 요청`.slice(0, 200));
+            const draft = complaintText({ id: id.current, address: address.trim(), description: description.trim(), category, issues, status: 'reported', latitude: point?.[0] ?? null, longitude: point?.[1] ?? null, analysis: ai === 'done' ? 'CLIP 제안 · 사용자 확인' : '직접 분류', created_at: now, updated_at: now, isMine: true });
+            setIntakeBody(`${draft}\n\n[설치 확인 상태]\n${installation.label}\n${installation.detail}\n※ 공공자료 미매칭은 불법 확정이 아니며, 최종 판단에는 지자체의 설치 승인·도로점용허가·토지 사용권원 등 행정 확인이 필요합니다.`);
             setConsent(false);
         }
         setStep(step + 1);
@@ -404,7 +418,7 @@ export default function ReportForm({ open, onOpenChange, onSaved, initialBin = n
                 h("div", { className: "eyebrow" }, "A SMALL ACTION, A BETTER STREET"),
                 h(DialogTitle, { className: "dialog-title" }, maintenance ? '정비 완료 사진 남기기' : '우리 동네에 제보 남기기'),
                 h(DialogDescription, null, maintenance ? '다른 사람의 제보를 바꾸지 않고, 같은 수거함에 새 정비 기록을 추가해요.' : '현장에서 본 그대로 알려 주세요.')),
-            h("div", { className: "form-steps" }, (maintenance ? ['정비 후 사진', '수거함 위치', '완료 확인'] : ['사진 선택', '상태와 위치', '내용 확인', '접수 확인']).map((s, i) => h("div", { key: s, className: i === step ? 'current' : i < step ? 'complete' : '' },
+            h("div", { className: "form-steps" }, (maintenance ? ['정비 후 사진', '수거함 위치', '완료 확인'] : ['사진 촬영·선택', '상태와 위치', '내용 확인', '접수 확인']).map((s, i) => h("div", { key: s, className: i === step ? 'current' : i < step ? 'complete' : '' },
                 h("span", null, i < step ? h(Check, { size: 14 }) : i + 1),
                 s))),
             h("div", { className: "form-scroll" },
@@ -425,15 +439,23 @@ export default function ReportForm({ open, onOpenChange, onSaved, initialBin = n
                 h("fieldset", { disabled: busy || !!savedReport, style: { border: 0, padding: 0, margin: 0, minWidth: 0 } },
                     step === 0 && h(Fragment, null,
                         mask && url ? h(PhotoMask, { url: baseUrl || url, initialRegions: maskRegions, onCancel: () => setMask(false), onApply: (b, regions) => { setPhoto(b); setMaskRegions(regions); setPrivacy('manual'); setReviewed(false); setMask(false); stop(); setAi('idle'); setSuggested(null); setIssues({}); setCategory(maintenance ? 'normal' : 'uncertain'); } }) : null,
-                        h("input", { ref: fileInput, type: "file", accept: "image/jpeg,image/png,image/webp", className: "sr-only", "aria-label": "\uC218\uAC70\uD568 \uD604\uC7A5 \uC0AC\uC9C4 \uC120\uD0DD", onChange: e => { select(e.target.files?.[0]); e.target.value = ''; } }),
+                        h("input", { ref: fileInput, type: "file", accept: "image/jpeg,image/png,image/webp", className: "sr-only", "aria-label": "\uC568\uBC94\uC5D0\uC11C \uC218\uAC70\uD568 \uD604\uC7A5 \uC0AC\uC9C4 \uC120\uD0DD", onChange: e => { select(e.target.files?.[0]); e.target.value = ''; } }),
+                        h("input", { ref: cameraInput, type: "file", accept: "image/jpeg,image/png,image/webp", capture: "environment", className: "sr-only", "aria-label": "\uCE74\uBA54\uB77C\uB85C \uC218\uAC70\uD568 \uD604\uC7A5 \uC0AC\uC9C4 \uCD2C\uC601", onChange: e => { select(e.target.files?.[0]); e.target.value = ''; } }),
+                        h("div", { className: "photo-source-actions", style: { display: mask ? 'none' : undefined } },
+                            h("button", { type: "button", className: "btn primary", disabled: processing, onClick: () => cameraInput.current?.click() },
+                                h(Camera, { size: 17 }),
+                                photo ? '다시 촬영' : '사진 촬영'),
+                            h("button", { type: "button", className: "btn", disabled: processing, onClick: () => fileInput.current?.click() },
+                                h(ImagePlus, { size: 17 }),
+                                photo ? '다른 사진 선택' : '앨범에서 선택')),
                         h("button", { type: "button", className: `upload-zone ${photo ? 'has-photo' : ''}`, style: { display: mask ? 'none' : undefined }, disabled: processing, onClick: () => fileInput.current?.click(), onDragOver: e => e.preventDefault(), onDrop: e => { e.preventDefault(); select(e.dataTransfer.files[0]); } }, url ? h(Fragment, null,
                             h("img", { src: url, alt: privacy === 'error' ? '직접 가리기가 필요한 사진 · 아직 저장되지 않음' : '가리기 결과를 확인할 현장 사진' }),
                             h("span", { className: "replace-photo" },
                                 h(ImagePlus, { size: 16 }),
                                 "\uC0AC\uC9C4 \uBC14\uAFB8\uAE30")) : h(Fragment, null,
                             h("span", { className: "large-camera" }, processing ? h(LoaderCircle, { className: "spin" }) : h(Camera, null)),
-                            h("h3", null, processing ? '사진을 안전하게 준비하고 있어요' : '수거함 사진을 올려 주세요'),
-                            h("p", null, "\uC0AC\uC9C4\uC744 \uB04C\uC5B4 \uB193\uAC70\uB098 \uB20C\uB7EC\uC11C \uC120\uD0DD\uD574\uC694"),
+                            h("h3", null, processing ? '사진을 안전하게 준비하고 있어요' : '수거함 사진을 촬영하거나 올려 주세요'),
+                            h("p", null, "\uD734\uB300\uD3F0\uC5D0\uC11C\uB294 \uC704 \u2018\uC0AC\uC9C4 \uCD2C\uC601\u2019 \uBC84\uD2BC\uC73C\uB85C \uBC14\uB85C \uCD2C\uC601\uD560 \uC218 \uC788\uC5B4\uC694."),
                             h("span", { className: "file-types" }, "JPG, PNG, WebP \u00B7 \uCD5C\uB300 15MB"))),
                         h("div", { className: `privacy-card ${privacy === 'error' ? 'needs-review' : ''}`, "aria-live": "polite" }, privacy === 'running' ? h(Fragment, null,
                             h("h3", null,
@@ -484,7 +506,10 @@ export default function ReportForm({ open, onOpenChange, onSaved, initialBin = n
                             h("p", null, validationText),
                             h("p", null, "\uC218\uAC70\uD568 \uC804\uCCB4\uC640 \uC8FC\uBCC0 \uBC14\uB2E5\uC774 \uD568\uAED8 \uBCF4\uC774\uB3C4\uB85D \uAC00\uAE4C\uC774\uC5D0\uC11C \uB2E4\uC2DC \uCD2C\uC601\uD558\uB294 \uAC83\uC744 \uAD8C\uC7A5\uD574\uC694."),
                             h("div", { className: "row wrap" },
-                                h("button", { className: "btn primary", type: "button", onClick: () => fileInput.current?.click() }, "\uB2E4\uC2DC \uCD2C\uC601\u00B7\uC120\uD0DD"),
+                                h("button", { className: "btn primary", type: "button", onClick: () => cameraInput.current?.click() },
+                                    h(Camera, { size: 16 }),
+                                    "\uB2E4\uC2DC \uCD2C\uC601"),
+                                h("button", { className: "btn", type: "button", onClick: () => fileInput.current?.click() }, "\uB2E4\uB978 \uC0AC\uC9C4 \uC120\uD0DD"),
                                 h("button", { className: "text-button", type: "button", onClick: () => setValidation('override') }, "\uC218\uAC70\uD568\uC774 \uB9DE\uC2B5\uB2C8\uB2E4 \u00B7 \uACC4\uC18D"))) : validation === 'error' ? h(Fragment, null,
                             h("h3", null, "\uC0AC\uC9C4 \uC801\uD569\uC131 \uAC80\uC0AC\uB97C \uC644\uB8CC\uD558\uC9C0 \uBABB\uD588\uC5B4\uC694"),
                             h("p", null, validationText),
@@ -552,6 +577,14 @@ export default function ReportForm({ open, onOpenChange, onSaved, initialBin = n
                                     " / 100\uC810 \u00B7 \uACE0\uC815 \uAC00\uC911\uCE58 \uCC38\uACE0 \uC810\uC218"))),
                         " ",
                         h(ReportLocation, { location: location, catalog: catalog }),
+                        !maintenance && h("div", { className: `installation-check-card ${installation.key}` },
+                            h("div", { className: "between" },
+                                h("b", null, "\uC124\uCE58 \uD655\uC778 \uC0C1\uD0DC"),
+                                h("span", null, installation.label)),
+                            h("p", null, installation.detail),
+                            installation.key === 'unmatched' && issues.no_label && h("p", null,
+                                h("strong", null, "\uAD00\uB9AC\uC790 \uD45C\uC2DC\uB3C4 \uD655\uC778\uD558\uAE30 \uC5B4\uB824\uC6CC \uC124\uCE58 \uADFC\uAC70\uB97C \uC6B0\uC120 \uD655\uC778\uD560 \uD544\uC694\uAC00 \uC788\uC5B4\uC694.")),
+                            h("small", null, "\uACF5\uACF5\uB370\uC774\uD130 \uC218\uB85D\u00B7\uBBF8\uC218\uB85D\uC740 \uC801\uBC95\uC131 \uD310\uC815\uACFC \uB2E4\uB985\uB2C8\uB2E4. \uCD5C\uC885 \uBD88\uBC95\u00B7\uBB34\uB2E8 \uC124\uCE58 \uC5EC\uBD80\uB294 \uAD00\uD560 \uC9C0\uC790\uCCB4\uC758 \uC2B9\uC778\u00B7\uB3C4\uB85C\uC810\uC6A9\uD5C8\uAC00\u00B7\uD1A0\uC9C0 \uC0AC\uC6A9\uAD8C\uC6D0 \uD655\uC778\uC774 \uD544\uC694\uD574\uC694.")),
                         h("label", { className: "field-label", htmlFor: "description" },
                             "\uD604\uC7A5 \uBA54\uBAA8 ",
                             h("span", { className: "optional" }, "\uC120\uD0DD")),
@@ -570,6 +603,9 @@ export default function ReportForm({ open, onOpenChange, onSaved, initialBin = n
                         h("p", { className: "field-hint" },
                             point ? `지도 좌표 ${point[0].toFixed(6)}, ${point[1].toFixed(6)}` : '지역만 등록 · 지도 좌표 없음',
                             linkedBin ? ` · ${linkedBin.title} 이력에 연결` : ' · 새 수거함으로 기록'),
+                        !maintenance && h("div", { className: `installation-check-card compact ${installation.key}` },
+                            h("b", null, installation.label),
+                            h("p", null, installation.detail)),
                         !maintenance && h("div", { className: "auto-intake-option" },
                             h("label", { className: "consent" },
                                 h(Checkbox, { checked: automatic, onCheckedChange: v => { setAutomatic(v === true); setConsent(false); } }),

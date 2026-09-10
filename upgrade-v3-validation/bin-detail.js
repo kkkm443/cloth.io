@@ -1,6 +1,6 @@
 import { h, Fragment, useState, useEffect, Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Camera, Plus, Check, MapPin } from './runtime.js';
 import { useCatalog } from './catalog.js';
-import { levels, originLabel, hasCoordinates, maintenanceTime, relativeTime, displayTime, observationScore, defaultComparison } from './bin-model.js';
+import { levels, originLabel, hasCoordinates, maintenanceTime, relativeTime, displayTime, observationScore, defaultComparison, installationCheck } from './bin-model.js';
 import { riskScore, stateText } from './keeper-features.js';
 import ReportPhoto from './report-photo.js';
 import Community from './community.js';
@@ -8,6 +8,7 @@ import EmpathyButton from './empathy-button.js';
 export default function BinDetail({ id, onClose, onReport, onMaintenance, onReportSelect, initialTab = 'overview', focusPostId = '', focusReportId = '' }) {
     const { byId } = useCatalog(), bin = byId.get(id);
     const [tab, setTab] = useState('overview');
+    const installation = bin ? installationCheck(bin) : null;
     useEffect(() => setTab(['overview', 'photos', 'history', 'community'].includes(initialTab) ? initialTab : 'overview'), [id, initialTab, focusPostId, focusReportId]);
     useEffect(() => { if (tab !== 'history' || !focusReportId)
         return; const t = setTimeout(() => document.getElementById('history-' + focusReportId)?.scrollIntoView({ block: 'nearest' }), 120); return () => clearTimeout(t); }, [tab, focusReportId, bin]);
@@ -73,7 +74,12 @@ export default function BinDetail({ id, onClose, onReport, onMaintenance, onRepo
                             bin.provider,
                             ". \uC704\uCE58 \uC790\uB8CC\uC758 \uAE30\uC900\uC77C \uC774\uD6C4 \uC774\uC804\u00B7\uCCA0\uAC70\uB418\uC5C8\uC744 \uC218 \uC788\uC5B4\uC694."),
                         bin.origin === 'registry' && bin.source && h("a", { className: "text-button", href: bin.source, target: "_blank", rel: "noreferrer" }, "\uC6B4\uC601\uC790\uAC00 \uC5F0\uACB0\uD55C \uACF5\uACF5\uC790\uB8CC \uCD9C\uCC98"),
-                        bin.origin === 'citizen' && h("p", { className: "soft-notice" }, "\uC774 \uC218\uAC70\uD568\uC740 \uC2DC\uBBFC\uC774 \uBC1C\uACAC\uD588\uC73C\uBA70 \uACF5\uACF5\uC790\uB8CC\uC640 \uC5F0\uACB0\uB418\uC9C0 \uC54A\uC558\uC5B4\uC694. \uC790\uB8CC \uB204\uB77D\u00B7\uAC31\uC2E0 \uCC28\uC774\uC77C \uC218 \uC788\uC73C\uBBC0\uB85C \uBBF8\uB4F1\uB85D \uB610\uB294 \uBD88\uBC95 \uC218\uAC70\uD568\uC73C\uB85C \uB2E8\uC815\uD558\uC9C0 \uC54A\uC2B5\uB2C8\uB2E4."),
+                        installation && h("div", { className: `installation-check-card ${installation.key}` },
+                            h("div", { className: "between" },
+                                h("b", null, "\uC124\uCE58 \uD655\uC778 \uC0C1\uD0DC"),
+                                h("span", null, installation.label)),
+                            h("p", null, installation.detail),
+                            h("small", null, bin.origin === 'citizen' ? '공공자료 미매칭은 ‘미등록 후보’ 분류이며 불법 확정이 아닙니다. 관할 지자체가 설치 승인·도로점용허가·토지 사용권원 등을 확인해야 합니다.' : '공공자료 수록 역시 설치 승인이나 도로점용허가 자체를 증명하지는 않습니다.')),
                         hasCoordinates(bin) && h("a", { className: "btn", href: `https://www.openstreetmap.org/?mlat=${bin.latitude}&mlon=${bin.longitude}#map=18/${bin.latitude}/${bin.longitude}`, target: "_blank", rel: "noreferrer" },
                             h(MapPin, { size: 16 }),
                             "\uC704\uCE58 \uD06C\uAC8C \uBCF4\uAE30")),
