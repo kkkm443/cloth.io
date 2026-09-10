@@ -1,0 +1,11 @@
+{
+  "version": "bin-traffic-community-3.3",
+  "features": [
+    "activity-feed",
+    "per-account-empathy",
+    "shared-bin-threads"
+  ],
+  "maskPolicy": "people-only-v1",
+  "requiresRules": "community-3.3",
+  "runtimeSourceSHA256": "7f8a4380d22fd405086d431901512818d64770acfe50db35f8f9243857264a94"
+}
