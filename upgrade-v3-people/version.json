@@ -1,0 +1,5 @@
+{
+  "version": "bin-traffic-people-3.2",
+  "maskPolicy": "people-only-v1",
+  "runtimeSourceSHA256": "5d306584b0939f87b6e6520e15e4ba970b8fc1918a2b8b04394e02363ec650c8"
+}
