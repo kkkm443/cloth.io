@@ -2,7 +2,7 @@ import { h, Fragment, useState, useEffect, useMemo, useRef, useCallback, useCont
 import { buildCatalog } from './bin-model.js';
 let Context, datasetPromise;
 export function loadPublicData() { if (!datasetPromise)
-    datasetPromise = fetch(appAsset('data/public-bins.json')).then(async (r) => { if (!r.ok)
+    datasetPromise = fetch(appAsset('data/public-bins.json?v=20260910-21sources')).then(async (r) => { if (!r.ok)
         throw new Error(`공공자료 파일을 불러오지 못했어요 (${r.status}). data 폴더를 함께 업로드해 주세요.`); const d = await r.json(); if (d.meta?.schemaVersion !== 1 || !Array.isArray(d.bins) || d.bins.length !== d.meta.total)
         throw new Error('공공자료 파일 형식을 확인해 주세요.'); return d; }).catch(e => { datasetPromise = null; throw e; }); return datasetPromise; }
 export function CatalogProvider({ children }) {

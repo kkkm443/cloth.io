@@ -1,0 +1,386 @@
+{
+  "sourceFileCount": 21,
+  "locationSourceFileCount": 20,
+  "auxiliarySourceFileCount": 1,
+  "sources": [
+    {
+      "name": "전국의류수거함표준데이터(1).csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "aad3eccd5e1bafbec5c1b1a406b582a63db5d78ca15aa111eec824f60bd9ec69",
+      "rawRows": 10503,
+      "parsedBins": 10502,
+      "locatedRows": 9531,
+      "mergedIntoExisting": 1,
+      "newBinsAdded": 10502,
+      "coordinatesFilled": 0,
+      "referenceDateRange": [
+        "2024-11-25",
+        "2026-06-24"
+      ],
+      "status": "base dataset"
+    },
+    {
+      "name": "서울특별시 서대문구_의류수거함 현황_20260401.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "01aa7a13dd12917963c67f45c9138c7638d1cfec99df6dba98e13ddc950793f3",
+      "rawRows": 472,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 472,
+      "locatedRows": 464,
+      "mergedIntoExisting": 0,
+      "newBinsAdded": 472,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2026-04-01",
+        "2026-04-01"
+      ]
+    },
+    {
+      "name": "서울특별시 강동구_의류수거함 현황_20260727.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "fb1cc368106db928b52b8394bc75799a62beedc51eb249ded3ff9c190ba6feae",
+      "rawRows": 500,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 500,
+      "locatedRows": 500,
+      "mergedIntoExisting": 0,
+      "newBinsAdded": 500,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2026-07-27",
+        "2026-07-27"
+      ]
+    },
+    {
+      "name": "제주특별자치도 제주시_의류수거함 정보_20250131.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "e964a0f5e8c2fc21ecf352721f82d8f3522915116dfd659b74d8e33c82c44cea",
+      "rawRows": 1329,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 1329,
+      "locatedRows": 1329,
+      "mergedIntoExisting": 0,
+      "newBinsAdded": 1329,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2025-01-31",
+        "2025-01-31"
+      ]
+    },
+    {
+      "name": "인천광역시 제물포구_의류수거함_20260316.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "996f4152ec2f45d08e6a1a73fecbbc8cd1f06e87ff6cb03ac7d07873be84f9a5",
+      "rawRows": 202,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 202,
+      "locatedRows": 0,
+      "mergedIntoExisting": 135,
+      "newBinsAdded": 67,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2026-03-16",
+        "2026-03-16"
+      ]
+    },
+    {
+      "name": "강원특별자치도 원주시_의류수거함 위치 정보_20240101.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "0613b64c4ddbb823e0675e6a67743dabd8bd3e47a8b0b42189f81ed172a0d400",
+      "rawRows": 60,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 60,
+      "locatedRows": 60,
+      "mergedIntoExisting": 59,
+      "newBinsAdded": 1,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2024-01-01",
+        "2024-01-01"
+      ]
+    },
+    {
+      "name": "전북특별자치도 익산시_의류수거함위치정보_20260414.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "cd74b2fa6f03a6a18fbc02ae97559ac638be5214f177b234e9394eb80d39d664",
+      "rawRows": 997,
+      "emptyRowsSkipped": 459,
+      "parsedBins": 538,
+      "locatedRows": 538,
+      "mergedIntoExisting": 520,
+      "newBinsAdded": 18,
+      "coordinatesFilled": 520,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2026-04-14",
+        "2026-04-14"
+      ]
+    },
+    {
+      "name": "경상남도 밀양시_의류수거함 위치현황_20250221.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "fa2b64a31d4d36f17b7697a4b9202636beb1e1872776365b9302efa907205ecf",
+      "rawRows": 53,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 53,
+      "locatedRows": 52,
+      "mergedIntoExisting": 0,
+      "newBinsAdded": 53,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2025-02-21",
+        "2025-02-21"
+      ]
+    },
+    {
+      "name": "서울특별시 강서구_의류수거함 위치현황_20240418.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "eb9751e9e53b1f0c8cebba4f6fee909c83d0f073e54f8ad075c82abf473a884a",
+      "rawRows": 623,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 623,
+      "locatedRows": 623,
+      "mergedIntoExisting": 0,
+      "newBinsAdded": 623,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2024-04-18",
+        "2024-04-18"
+      ]
+    },
+    {
+      "name": "서울특별시 동대문구_의류수거함 위치_20260317.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "ffda59e44e83f165473d63c54f17b35a5ccb2aa76b49bb227ecae7da075a015b",
+      "rawRows": 440,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 440,
+      "locatedRows": 0,
+      "mergedIntoExisting": 237,
+      "newBinsAdded": 203,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2026-03-17",
+        "2026-03-17"
+      ]
+    },
+    {
+      "name": "전남광주통합특별시 북구_의류수거함 현황_20260520.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "035c47f731776e919ffebff5ad88697682d6e09ed49a274889083b5534916111",
+      "rawRows": 307,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 307,
+      "locatedRows": 307,
+      "mergedIntoExisting": 0,
+      "newBinsAdded": 307,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2026-05-20",
+        "2026-05-20"
+      ]
+    },
+    {
+      "name": "인천광역시 미추홀구_의류수거함 위치 현황_20241210.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "0936ff54d29587791c95ecf83b6c287a15a8f08e5cb9c23cfb738f7745203378",
+      "rawRows": 882,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 882,
+      "locatedRows": 882,
+      "mergedIntoExisting": 0,
+      "newBinsAdded": 882,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2024-12-10",
+        "2024-12-10"
+      ]
+    },
+    {
+      "name": "서울특별시 구로구_의류수거함_20250601.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "61898bb836c672685231336307b7bfc9664894942aa298eeda6f1a663b77ca6a",
+      "rawRows": 423,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 423,
+      "locatedRows": 0,
+      "mergedIntoExisting": 0,
+      "newBinsAdded": 423,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2025-06-10",
+        "2025-06-10"
+      ]
+    },
+    {
+      "name": "서울특별시_마포구_의류 수거함 수거량_20221207.csv",
+      "kind": "auxiliary",
+      "format": "csv",
+      "sha256": "22f0f79e8ac43d818d561f0caceec4d56fff5d070f4d8914d0e3e665aeecaf94",
+      "rawRows": 1,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 0,
+      "locatedRows": 0,
+      "mergedIntoExisting": 0,
+      "newBinsAdded": 0,
+      "coordinatesFilled": 0,
+      "status": "auxiliary statistic only — no location rows",
+      "auxiliary": {
+        "area": "서울특별시 마포구",
+        "metric": "의류수거함 수거량",
+        "period": "2022-01-01~2022-12-07",
+        "valueKg": 677051.0
+      }
+    },
+    {
+      "name": "노원구의류수거함동별주소록(2025.7.).xlsx",
+      "kind": "location",
+      "format": "xlsx",
+      "sha256": "b5a3c24e6a79b59f90acd8a6e95e002ce9300272dfb4941946c019681ced8312",
+      "rawRows": 267,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 267,
+      "locatedRows": 0,
+      "mergedIntoExisting": 246,
+      "newBinsAdded": 21,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2025-07-01",
+        "2025-07-01"
+      ]
+    },
+    {
+      "name": "서울특별시 강남구_의류수거함 위치 현황_20240311.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "f897ec28ec3be70899cbadd0a4017fd9fd8e8624570544a95b92e9283883ebb2",
+      "rawRows": 667,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 667,
+      "locatedRows": 667,
+      "mergedIntoExisting": 0,
+      "newBinsAdded": 667,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2024-03-11",
+        "2024-03-11"
+      ]
+    },
+    {
+      "name": "서울특별시 영등포구_의류수거함 위치현황_20250822.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "aa3603dfc1194f9ed4fd4caa0ce3f234a47b57853356e216f449b357dbdd059a",
+      "rawRows": 102,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 102,
+      "locatedRows": 92,
+      "mergedIntoExisting": 0,
+      "newBinsAdded": 102,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2025-08-22",
+        "2025-08-22"
+      ]
+    },
+    {
+      "name": "서울특별시 종로구_의류수거함 위치현황_20260715.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "658376847a529a2816576064fde3702ee1f378119928ad3a8d05bf925fd12282",
+      "rawRows": 246,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 246,
+      "locatedRows": 246,
+      "mergedIntoExisting": 0,
+      "newBinsAdded": 246,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2026-07-15",
+        "2026-07-15"
+      ]
+    },
+    {
+      "name": "인천광역시 서해구_의류수거함_20260107.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "054b5642ee051074547fc86a1fbc469728b332b2be50c18e0bb7d3e911b43c09",
+      "rawRows": 925,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 925,
+      "locatedRows": 815,
+      "mergedIntoExisting": 0,
+      "newBinsAdded": 925,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2026-01-07",
+        "2026-01-07"
+      ]
+    },
+    {
+      "name": "서울특별시 동작구_의류수거함 위치 데이터_20260108.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "1674d6e6d2e9c4b5c1134a5180c6d92cee95641969eaf70cf36365d6186f8cfc",
+      "rawRows": 416,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 416,
+      "locatedRows": 416,
+      "mergedIntoExisting": 0,
+      "newBinsAdded": 416,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2026-01-08",
+        "2026-01-08"
+      ]
+    },
+    {
+      "name": "서울특별시 중랑구_의류수거함 위치현황_20240319.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "afc7ebe2dc957df66c4359ea04dba3a6286a902fdb0eb37036271b1ecf5f8997",
+      "rawRows": 615,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 615,
+      "locatedRows": 575,
+      "mergedIntoExisting": 598,
+      "newBinsAdded": 17,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2024-03-19",
+        "2024-03-19"
+      ]
+    }
+  ]
+}
