@@ -1,6 +1,6 @@
 {
-  "sourceFileCount": 21,
-  "locationSourceFileCount": 20,
+  "sourceFileCount": 27,
+  "locationSourceFileCount": 26,
   "auxiliarySourceFileCount": 1,
   "sources": [
     {
@@ -380,6 +380,114 @@
       "referenceDateRange": [
         "2024-03-19",
         "2024-03-19"
+      ]
+    },
+    {
+      "name": "서울특별시 양천구_의류수거함위치_20250630.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "74656caee4de1a5c0c57c9701635e77e8532a63b432bb862af17d0222e95f28f",
+      "rawRows": 691,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 691,
+      "locatedRows": 691,
+      "mergedIntoExisting": 0,
+      "newBinsAdded": 691,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2025-06-30",
+        "2025-06-30"
+      ]
+    },
+    {
+      "name": "서울특별시 서초구_의류수거함 위치 데이터_20260330.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "339af69e5d4ab348534fd701fccc50b36fc4af1b426cc5617a7aaff9a67eec5b",
+      "rawRows": 245,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 245,
+      "locatedRows": 245,
+      "mergedIntoExisting": 245,
+      "newBinsAdded": 0,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2026-03-30",
+        "2026-03-30"
+      ]
+    },
+    {
+      "name": "서울특별시 성북구_의류수거함 현황_20240307.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "837bce250a938d182e819919e88cbfc884d37c701b0b7eae7429397ca47555a9",
+      "rawRows": 252,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 252,
+      "locatedRows": 252,
+      "mergedIntoExisting": 0,
+      "newBinsAdded": 252,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2024-04-17",
+        "2024-04-17"
+      ]
+    },
+    {
+      "name": "서울특별시 관악구_의류수거함위치_20210121.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "90b1f53555fbca3bf4ffa0b0c599874d28a66fb0174ebc8ae2145bc618699839",
+      "rawRows": 887,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 887,
+      "locatedRows": 887,
+      "mergedIntoExisting": 0,
+      "newBinsAdded": 887,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2021-01-21",
+        "2021-01-21"
+      ]
+    },
+    {
+      "name": "서울특별시 성동구_의류수거함 현황_20260724.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "9088788755c7472dadfd3aefa6b8dd57082c160ba6547ffedaa44c9c8543b02e",
+      "rawRows": 310,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 310,
+      "locatedRows": 310,
+      "mergedIntoExisting": 0,
+      "newBinsAdded": 310,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2026-07-24",
+        "2026-07-24"
+      ]
+    },
+    {
+      "name": "서울특별시 송파구_관내 의류수거함 현황_20240101.csv",
+      "kind": "location",
+      "format": "csv",
+      "sha256": "88ea1b030e86ebbc6c0b3cc519080f3db4279bc174bd43d193968ecd9810ea4e",
+      "rawRows": 578,
+      "emptyRowsSkipped": 0,
+      "parsedBins": 578,
+      "locatedRows": 578,
+      "mergedIntoExisting": 0,
+      "newBinsAdded": 578,
+      "coordinatesFilled": 0,
+      "status": "integrated",
+      "referenceDateRange": [
+        "2024-01-01",
+        "2024-01-01"
       ]
     }
   ]

@@ -1,0 +1,30 @@
+{
+  "version": "3.8",
+  "features": [
+    "activity-feed",
+    "per-account-empathy",
+    "shared-bin-threads",
+    "input-photo-validation",
+    "retake-guidance",
+    "manual-validation-override",
+    "direct-camera-capture",
+    "public-data-installation-triage",
+    "installation-priority-bonus",
+    "strict-photo-target-gate",
+    "electronics-hard-negative",
+    "two-pass-lookalike-check"
+  ],
+  "maskPolicy": "people-only-v1",
+  "imageValidationModel": "Xenova/clip-vit-base-patch32",
+  "legalClassification": "administrative-confirmation-required",
+  "requiresRules": "community-3.3",
+  "runtimeSourceSHA256": "7f8a4380d22fd405086d431901512818d64770acfe50db35f8f9243857264a94",
+  "installationPriority": {
+    "publicDataListed": 0,
+    "publicDataNearbyCandidate": 0,
+    "publicDataUnmatchedCitizenBin": 20,
+    "note": "Public-data mismatch is not an illegal-installation determination. The bonus only raises administrative review priority."
+  },
+  "imageValidationPolicy": "two-pass conservative gate: target match + hard-negative lookalike challenge",
+  "name": "map-loader-fix-27sources"
+}
