@@ -1,6 +1,6 @@
 // Pinned Transformers.js browser module. Inference stays on this device.
 import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1/dist/transformers.min.js';
-import { targetLabels, summarizeTargetResults } from './analysis-core.js';
+import { targetLabels, challengeLabels, summarizeTargetResults, summarizeChallengeResults, combineValidationResults } from './analysis-core.js?v=3.7';
 env.allowLocalModels = false;
 env.backends.onnx.wasm.numThreads = 1;
 let classifier;
@@ -24,9 +24,17 @@ self.onmessage = async ({data}) => {
  try {
   const model=await getClassifier();
   if(data.mode==='validate'){
-   self.postMessage({type:'analyzing',text:'의류수거함이 사진에 충분히 보이는지 확인하고 있어요'});
-   const results=await model(data.image,targetLabels.map(x=>x.text));
-   self.postMessage({type:'validation',...summarizeTargetResults(results)});
+   self.postMessage({type:'analyzing',text:'의류수거함과 다른 사물을 1차 비교하고 있어요'});
+   const primaryResults=await model(data.image,targetLabels.map(x=>x.text));
+   const primary=summarizeTargetResults(primaryResults);
+   if(primary.status==='invalid'){
+    self.postMessage({type:'validation',...primary});
+    return;
+   }
+   self.postMessage({type:'analyzing',text:'모니터·전기함·쓰레기통 등 비슷한 사물과 다시 확인하고 있어요'});
+   const challengeResults=await model(data.image,challengeLabels.map(x=>x.text));
+   const challenge=summarizeChallengeResults(challengeResults);
+   self.postMessage({type:'validation',...combineValidationResults(primary,challenge)});
    return;
   }
   self.postMessage({type:'analyzing',text:'사진 속 수거함 상태를 비교하고 있어요'});
