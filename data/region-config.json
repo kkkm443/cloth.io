@@ -1,0 +1,12 @@
+{
+  "version": "2026-07-01",
+  "sources": [
+    "./data/regions.geojson",
+    "https://raw.githubusercontent.com/vuski/admdongkor/master/ver20260701/HangJeongDong_ver20260701.geojson"
+  ],
+  "note": "The boundary geometry is downloaded on first use; this archive does not include the remote GeoJSON. Run upgrade-tools/prepare-regions.py to bundle a same-origin snapshot before deployment.",
+  "source": "vuski/admdongkor, ver20260701 (SGIS-derived WGS84 administrative-dong boundaries)",
+  "license": "CC-BY-4.0; preserve SGIS KOGL Type 1 attribution",
+  "regionKind": "administrative-dong (not legal-dong or street number)",
+  "sourcePage": "https://github.com/vuski/admdongkor/tree/master/ver20260701"
+}

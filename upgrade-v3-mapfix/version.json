@@ -1,0 +1,5 @@
+{
+  "version": "bin-traffic-mapfix-3.1",
+  "dataset": "public-bins.json",
+  "runtimeSourceSHA256": "f3ad851e7c1d7ed5ba396be7f7f923d8c279dda61afb66009ba2349517323091"
+}
