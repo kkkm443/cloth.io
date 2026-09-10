@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "datasetName": "전국의류수거함표준데이터",
+  "sourceFile": "전국의류수거함표준데이터(1).csv",
+  "sourceSha256": "aad3eccd5e1bafbec5c1b1a406b582a63db5d78ca15aa111eec824f60bd9ec69",
+  "sourceUrl": "https://www.data.go.kr/",
+  "encoding": "cp949",
+  "rawRows": 10503,
+  "duplicateRowsMerged": 1,
+  "total": 10502,
+  "located": 9531,
+  "missingCoordinates": 971,
+  "invalidCoordinates": 0,
+  "provinceCount": 15,
+  "districtCount": 38,
+  "earliestReferenceDate": "2024-11-25",
+  "latestReferenceDate": "2026-06-24",
+  "coverageNote": "원본 CSV에 수록된 범위이며, 대한민국의 모든 수거함을 뜻하지 않습니다."
+}

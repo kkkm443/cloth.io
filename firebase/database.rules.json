@@ -11,7 +11,7 @@
         ],
         "$id": {
           ".write": "auth != null && ((!data.exists() && newData.child('owner_id').val() === auth.uid) || data.child('owner_id').val() === auth.uid) && (newData.exists() || (root.child('clothingKeeper').child('intakes').child(auth.uid).child($id).child('status').val() !== 'queued' && root.child('clothingKeeper').child('intakes').child(auth.uid).child($id).child('status').val() !== 'sending' && root.child('clothingKeeper').child('intakes').child(auth.uid).child($id).child('status').val() !== 'delivery_unknown'))",
-          ".validate": "newData.hasChildren(['id','owner_id','address','description','category','status','analysis','created_at','updated_at','revision','events']) && newData.child('id').val() === $id && ((!data.exists() && newData.child('revision').val() === 1) || (data.exists() && newData.child('revision').val() === data.child('revision').val() + 1)) && newData.child('updated_at').val() === now && (!data.exists() || newData.child('owner_id').val() === data.child('owner_id').val())",
+          ".validate": "newData.hasChildren(['id','owner_id','address','description','category','status','analysis','created_at','updated_at','revision','events']) && newData.child('id').val() === $id && ((!data.exists() && newData.child('revision').val() === 1) || (data.exists() && newData.child('revision').val() === data.child('revision').val() + 1)) && newData.child('updated_at').val() === now && (!data.exists() || newData.child('owner_id').val() === data.child('owner_id').val()) && (!data.child('kind').exists() || newData.child('kind').val() === data.child('kind').val()) && (!data.child('bin_id').exists() || newData.child('bin_id').val() === data.child('bin_id').val()) && (newData.child('latitude').exists() === newData.child('longitude').exists()) && (newData.child('kind').val() !== 'maintenance' || (newData.child('bin_id').exists() && newData.child('category').val() === 'normal' && newData.child('status').val() === 'resolved' && newData.child('issues/overflow').val() !== true && newData.child('issues/dumping').val() !== true && newData.child('issues/damage').val() !== true && newData.child('issues/no_label').val() !== true))",
           "id": {
             ".validate": "newData.isString() && newData.val() === $id && newData.val().matches(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/) && (!data.exists() || newData.val() === data.val())"
           },
@@ -90,10 +90,13 @@
             }
           },
           "bin_id": {
-            ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 100"
+            ".validate": "newData.isString() && newData.val().matches(/^[a-zA-Z0-9_-]{1,100}$/) && (!data.exists() || newData.val() === data.val())"
           },
           "photo_hash": {
             ".validate": "newData.isString() && newData.val().matches(/^[0-9a-f]{64}$/)"
+          },
+          "kind": {
+            ".validate": "(newData.val() === 'observation' || newData.val() === 'maintenance') && (!data.exists() || newData.val() === data.val())"
           }
         }
       },
@@ -150,7 +153,7 @@
         ".validate": false
       },
       "intakes": {
-        ".read": "auth != null && auth.token.keeper_operator === true",
+        ".read": "auth != null && (auth.token.keeper_operator === true || root.child('clothingKeeper').child('operators').child(auth.uid).val() === true)",
         "$uid": {
           ".read": "auth != null && auth.uid === $uid",
           "$id": {
@@ -185,7 +188,7 @@
             },
             "operator_notes": {
               "$note": {
-                ".write": "auth != null && auth.token.keeper_operator === true && data.parent().parent().exists() && !data.exists() && newData.exists()",
+                ".write": "auth != null && (auth.token.keeper_operator === true || root.child('clothingKeeper').child('operators').child(auth.uid).val() === true) && data.parent().parent().exists() && !data.exists() && newData.exists()",
                 ".validate": "newData.hasChildren(['text','at','operator']) && newData.child('operator').val() === auth.uid && newData.child('at').val() === now",
                 "text": {
                   ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 600"
@@ -200,10 +203,35 @@
                   ".validate": false
                 }
               },
-              ".validate": "data.parent().exists() && auth.token.keeper_operator === true"
+              ".validate": "data.parent().exists() && (auth != null && (auth.token.keeper_operator === true || root.child('clothingKeeper').child('operators').child(auth.uid).val() === true))"
             },
             "$other": {
               ".validate": false
+            },
+            "operator_state": {
+              ".write": "auth != null && (auth.token.keeper_operator === true || root.child('clothingKeeper').child('operators').child(auth.uid).val() === true) && data.parent().exists() && newData.exists()",
+              ".validate": "data.parent().exists() && newData.hasChildren(['stage','assignee','note','revision','updated_at','updated_by']) && newData.child('updated_by').val() === auth.uid && newData.child('updated_at').val() === now && ((!data.exists() && newData.child('revision').val() === 1) || (data.exists() && newData.child('revision').val() === data.child('revision').val() + 1)) && (newData.child('stage').val() !== 'assigned' || newData.child('assignee').val().length > 0)",
+              "stage": {
+                ".validate": "newData.val() === 'received' || newData.val() === 'reviewing' || newData.val() === 'assigned' || newData.val() === 'resolved'"
+              },
+              "assignee": {
+                ".validate": "newData.isString() && newData.val().length >= 0 && newData.val().length <= 100"
+              },
+              "note": {
+                ".validate": "newData.isString() && newData.val().length >= 2 && newData.val().length <= 600"
+              },
+              "revision": {
+                ".validate": "newData.isNumber()"
+              },
+              "updated_at": {
+                ".validate": "newData.isNumber()"
+              },
+              "updated_by": {
+                ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 128"
+              },
+              "$other": {
+                ".validate": false
+              }
             }
           }
         }
@@ -215,7 +243,7 @@
       "registry": {
         ".read": "auth != null",
         "$id": {
-          ".write": "auth != null && auth.token.keeper_operator === true",
+          ".write": "auth != null && (auth.token.keeper_operator === true || root.child('clothingKeeper').child('operators').child(auth.uid).val() === true)",
           ".validate": "newData.hasChildren(['address','latitude','longitude','source','checked'])",
           "address": {
             ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 200"
@@ -237,9 +265,89 @@
           }
         }
       },
+      "operators": {
+        "$uid": {
+          ".read": "auth != null && auth.uid === $uid",
+          ".write": false
+        }
+      },
       "deliveryLedger": {
         ".read": false,
         ".write": false
+      },
+      "citizenBins": {
+        ".read": "auth != null",
+        "$id": {
+          ".write": "auth != null && !data.exists() && newData.exists() && newData.child('owner_id').val() === auth.uid",
+          ".validate": "newData.hasChildren(['id','owner_id','address','created_at']) && newData.child('id').val() === $id && newData.child('created_at').val() === now && (newData.child('latitude').exists() === newData.child('longitude').exists()) && newData.parent().parent().child('reports').child($id).child('owner_id').val() === auth.uid && newData.parent().parent().child('reports').child($id).child('bin_id').val() === $id && newData.child('address').val() === newData.parent().parent().child('reports').child($id).child('address').val() && newData.child('latitude').val() === newData.parent().parent().child('reports').child($id).child('latitude').val() && newData.child('longitude').val() === newData.parent().parent().child('reports').child($id).child('longitude').val()",
+          "id": {
+            ".validate": "newData.isString() && newData.val() === $id && newData.val().matches(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/)"
+          },
+          "owner_id": {
+            ".validate": "newData.isString() && newData.val() === auth.uid"
+          },
+          "address": {
+            ".validate": "newData.isString() && newData.val().length >= 3 && newData.val().length <= 200"
+          },
+          "latitude": {
+            ".validate": "newData.isNumber() && newData.val() >= -90 && newData.val() <= 90"
+          },
+          "longitude": {
+            ".validate": "newData.isNumber() && newData.val() >= -180 && newData.val() <= 180"
+          },
+          "created_at": {
+            ".validate": "newData.isNumber() && newData.val() === now"
+          },
+          "$other": {
+            ".validate": false
+          }
+        }
+      },
+      "community": {
+        "$bin": {
+          ".read": "auth != null",
+          ".indexOn": [
+            "created_at",
+            "parent_id"
+          ],
+          "$message": {
+            ".write": "auth != null && newData.exists() && ((!data.exists() && newData.child('author_id').val() === auth.uid) || (data.exists() && data.child('deleted').val() === false && newData.child('deleted').val() === true && (data.child('author_id').val() === auth.uid || (auth != null && (auth.token.keeper_operator === true || root.child('clothingKeeper').child('operators').child(auth.uid).val() === true)))))",
+            ".validate": "newData.hasChildren(['id','bin_id','author_id','nickname','topic','text','parent_id','created_at','updated_at','deleted']) && $bin.matches(/^[a-zA-Z0-9_-]{1,100}$/) && newData.child('id').val() === $message && newData.child('bin_id').val() === $bin && newData.child('updated_at').val() === now && ((!data.exists() && newData.child('created_at').val() === now && newData.child('deleted').val() === false && newData.child('text').val().length >= 2 && (newData.child('parent_id').val() === '' || (root.child('clothingKeeper').child('community').child($bin).child(newData.child('parent_id').val()).exists() && root.child('clothingKeeper').child('community').child($bin).child(newData.child('parent_id').val()).child('parent_id').val() === '' && root.child('clothingKeeper').child('community').child($bin).child(newData.child('parent_id').val()).child('deleted').val() === false))) || (data.exists() && newData.child('text').val() === '' && newData.child('deleted').val() === true))",
+            "id": {
+              ".validate": "newData.isString() && newData.val() === $message && newData.val().matches(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/) && (!data.exists() || newData.val() === data.val())"
+            },
+            "bin_id": {
+              ".validate": "newData.isString() && newData.val() === $bin && (!data.exists() || newData.val() === data.val())"
+            },
+            "author_id": {
+              ".validate": "newData.isString() && ((!data.exists() && newData.val() === auth.uid) || (data.exists() && newData.val() === data.val()))"
+            },
+            "nickname": {
+              ".validate": "newData.isString() && newData.val().length >= 1 && newData.val().length <= 40 && (!data.exists() || newData.val() === data.val())"
+            },
+            "topic": {
+              ".validate": "(newData.val() === 'general' || newData.val() === 'not_collected' || newData.val() === 'trash' || newData.val() === 'contact' || newData.val() === 'cleaned') && (!data.exists() || newData.val() === data.val())"
+            },
+            "text": {
+              ".validate": "newData.isString() && newData.val().length >= 0 && newData.val().length <= 1200"
+            },
+            "parent_id": {
+              ".validate": "newData.isString() && (newData.val() === '' || newData.val().matches(/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/)) && (!data.exists() || newData.val() === data.val())"
+            },
+            "created_at": {
+              ".validate": "newData.isNumber() && newData.val() <= now && (!data.exists() || newData.val() === data.val())"
+            },
+            "updated_at": {
+              ".validate": "newData.isNumber() && newData.val() === now"
+            },
+            "deleted": {
+              ".validate": "newData.isBoolean()"
+            },
+            "$other": {
+              ".validate": false
+            }
+          }
+        }
       }
     }
   }
